@@ -1,0 +1,18 @@
+service: drgutbot
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+  region: ap-southeast-2
+  environment:
+    BOT_TOKEN: {env:DRGUT_BOT_TOKEN}
+
+functions:
+  EventHandler:
+    handler: app/app.message_handler
+    event:
+      - http:
+          path: ride
+          method: post
+          cors: true
