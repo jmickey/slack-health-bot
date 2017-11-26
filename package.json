@@ -2,7 +2,10 @@
   "name": "drgutbot",
   "description": "",
   "version": "0.1.0",
-  "dependencies": {},
+  "dependencies": {
+    "aws-sdk": "^2.156.0",
+    "slack-message-builder": "^1.1.1"
+  },
   "devDependencies": {
     "serverless-python-requirements": "^3.0.10"
   }
