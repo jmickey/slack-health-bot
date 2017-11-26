@@ -6,7 +6,8 @@ provider:
   stage: dev
   region: ap-southeast-2
   environment:
-    VERIFICATION_TOKEN=${env:VERIFICATION_TOKEN}
+    VERIFICATION_TOKEN: ${env:VERIFICATION_TOKEN}
+    BOT_TOKEN: ${env:DRGUT_BOT_TOKEN}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -19,16 +20,36 @@ package:
   exclude:
     - '**/*'
   include:
-    - app/app.py
+    - src/handlers.py
 
 functions:
   EventHandler:
     handler: src/handlers.message_handler
-    environment:
-      BOT_TOKEN: ${env:DRGUT_BOT_TOKEN}
     events:
       - http:
           path: msg
+          method: post
+          cors: true
+  QuestionResp:
+    handler: src/handlers.question_resp
+    events:
+      - http:
+          path: question/resp
+          method: post
+          cors: true
+          integration: lambda
+          request:
+            template:
+              application/x-www-form-urlencoded: ${file(src/blobs/req_template.vtl)}
+          response:
+            headers:
+              Content-Type: "'text/plain'"
+            template: $input.path('$')
+  SetName:
+    handler: src/handlers.set_name
+    events:
+      - http:
+          path: name/set
           method: post
           cors: true
 

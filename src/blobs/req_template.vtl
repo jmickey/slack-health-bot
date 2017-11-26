@@ -1,0 +1,3 @@
+## The 8 simply strips off the 'payload=' characters at the beginning of the input
+#set ($encodedJSON = $input.body.substring(8))
+$util.urlDecode($encodedJSON)
