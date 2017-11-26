@@ -6,13 +6,66 @@ provider:
   stage: dev
   region: ap-southeast-2
   environment:
-    BOT_TOKEN: {env:DRGUT_BOT_TOKEN}
+    VERIFICATION_TOKEN=${env:VERIFICATION_TOKEN}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource:
+        - "Fn::GetAtt": [UsersTable, Arn]
+        - "Fn::GetAtt": [QuestionsTable, Arn]
+
+package:
+  exclude:
+    - '**/*'
+  include:
+    - app/app.py
 
 functions:
   EventHandler:
-    handler: app/app.message_handler
-    event:
+    handler: src/handlers.message_handler
+    environment:
+      BOT_TOKEN: ${env:DRGUT_BOT_TOKEN}
+    events:
       - http:
-          path: ride
+          path: msg
           method: post
           cors: true
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: DrGutUsers
+        AttributeDefinitions:
+          - AttributeName: UserId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: UserId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    QuestionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: DrGutQuestions
+        AttributeDefinitions:
+          - AttributeName: QuestionNum
+            AttributeType: N
+        KeySchema:
+          - AttributeName: QuestionNum
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+plugins:
+  - serverless-python-requirements
+custom:
+  pythonRequirements:
+    zip: false
+    cleanupZipHelper: true
+    dockerizePip: false
+    pythonBin: python

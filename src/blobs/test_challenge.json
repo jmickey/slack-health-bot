@@ -1,0 +1,9 @@
+{
+    "path": "/msg",
+    "httpMethod": "POST",
+    "headers": {
+        "Accept": "*/*",
+        "content-type": "application/json"
+    },
+    "body": "{\"challenge\":\"fjdvn83n4o3vnw0qnoqrvn\"}"
+}
