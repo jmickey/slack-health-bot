@@ -3,7 +3,7 @@
   "description": "",
   "version": "0.1.0",
   "dependencies": {
-    "aws-sdk": "^2.156.0",
+    "aws-sdk": "^2.814.0",
     "slack-message-builder": "^1.1.1"
   },
   "devDependencies": {
